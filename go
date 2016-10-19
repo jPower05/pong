@@ -1,0 +1,2 @@
+reset
+mstart pong.prx

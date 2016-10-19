@@ -1,0 +1,39 @@
+#
+# PSP Makefile
+#
+
+SDK_TOP		= $(DEVKIT)
+INCDIR		= $(SDK_TOP)/include
+LIBDIR		= $(SDK_TOP)/lib
+
+DBGFLAG		= -g
+OPTFLAG		= -O2
+SECTFLAG	= -ffunction-sections -fdata-sections
+CFLAGS		= -W -Wall $(DBGFLAG) $(OPTFLAG) $(SECTFLAG) -I$(INCDIR)
+ASFLAGS		= $(DBGFLAG)
+LDFLAGS		= $(DBGFLAG) -L$(LIBDIR)
+LDLIBS		= -lgum -lgu -lm
+LOADLIBES	=  $(LIBDIR)/ctrl_stub.a
+LOADLIBES	+= $(LIBDIR)/display_stub.a
+LOADLIBES	+= $(LIBDIR)/ge_user_stub.a
+
+TARGET	= pong
+OBJS	= pong.o pong_psp.o pong_glfw.o
+
+all:	$(TARGET).prx $(TARGET).elf
+
+clean:
+	rm -f $(TARGET).prx $(TARGET).elf *.sym *.o *~ *.bak PathDefs
+
+$(TARGET).prx: $(OBJS)
+	$(LINK.cpp) $^ $(LDLIBS) $(LOADLIBES) -startfiles -zgc-sections -zv -o $@.sym
+	$(STRIP) --strip-section-header -o $@ $@.sym
+
+$(TARGET).elf: $(OBJS)
+	$(LINK.cpp) $^ $(LDLIBS) $(LOADLIBES) -zgenelf -Wl,-gc-sections -o $@.sym
+	$(STRIP) --strip-section-header -o $@ $@.sym
+
+#----------- rules --------------
+-include PathDefs
+PathDefs:
+	psp-path-setup > PathDefs || (rm -f PathDefs ; exit 1)
