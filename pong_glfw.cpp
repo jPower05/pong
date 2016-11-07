@@ -9,11 +9,18 @@
 // Headers
 // ===============================================
 #include "pong.h"
+#include<iostream>
 
+using namespace std;
 #ifndef PSP
-
 // helper function taken from GLUI library
 // used to render a string 
+
+
+
+
+
+
 void _glutBitmapString(void *font, char *s) {
     char *p = s;
 
@@ -25,7 +32,7 @@ void _glutBitmapString(void *font, char *s) {
 
 
 int init(void) {
-
+	
 	static int argc=1;
 	static char *argv[1];
 	argv[0] = strdup("pong");
@@ -87,9 +94,13 @@ int draw_scene(void) {
     glPopMatrix();
 
 	// ball
+	
     glPushMatrix();
-        glTranslatef(ball_x_pos - BALL_SIZE/2, ball_y_pos  - BALL_SIZE/2, 0);
-        draw_ball();
+		for (int n = 0; n < ballCount; n ++){
+        	glTranslatef(balls[n].x - BALL_SIZE/2, balls[n].y  - BALL_SIZE/2, 0);
+        	draw_ball();
+		}
+		
     glPopMatrix();
 
 	draw_status();								// status message

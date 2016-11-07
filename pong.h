@@ -35,6 +35,7 @@
 #include <string.h>     				// for strcpy()
 #include <math.h>       				// for cos(), sin()
 
+
 // ===============================================
 // Global identifiers
 // ===============================================
@@ -82,9 +83,16 @@ extern float paddle_length;
 	#define PADDLE_STEP  dt*520
 #endif
 
-extern float ball_x_pos;
-extern float ball_y_pos;
-extern float ball_angle;				// angle of ball trajectory
+
+struct Ball{
+	float x, y, angle;
+};
+const int MAX_BALL_COUNT = 5;
+extern Ball balls[MAX_BALL_COUNT];
+extern int ballCount;
+
+
+
 
 extern float paddle_x_pos;
 extern float paddle_y_pos;
@@ -93,7 +101,9 @@ extern float paddle_speed;
 extern int game_quit;					// flag - true for user want to quit game
 extern int auto_mode;					// flag - true for computer playing
 extern int score;						// number bounces off paddle
-extern int lives;						// number of balls left to play						
+extern int lives;						// number of balls left to play	
+extern int paddle_hits;                 // number of hits ball has with paddle		
+		
 
 // frame information
 extern double this_time, old_time, dt, start_time;
@@ -117,5 +127,13 @@ int draw_scene(void);					// draw scene by calling draw_* functions
 void draw_status(void);					// draw status message
 
 void get_input(void);					// keyboard/mouse/pad input
+
+void createNewBall(float x,float y, float angle);	//used to spawn a new ball
+
+void destroyBall(int index);    //destroys a ball
+
+void onPaddleHit(int index,const float maxPos);
+
+void onPaddleMiss(int index);
 
 #endif
