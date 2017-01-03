@@ -9,11 +9,18 @@
 // Headers
 // ===============================================
 #include "pong.h"
+#include<iostream>
 
+using namespace std;
 #ifndef PSP
-
 // helper function taken from GLUI library
 // used to render a string 
+
+
+
+
+
+
 void _glutBitmapString(void *font, char *s) {
     char *p = s;
 
@@ -25,7 +32,7 @@ void _glutBitmapString(void *font, char *s) {
 
 
 int init(void) {
-
+	
 	static int argc=1;
 	static char *argv[1];
 	argv[0] = strdup("pong");
@@ -86,11 +93,21 @@ int draw_scene(void) {
         draw_paddle();
     glPopMatrix();
 
-	// ball
-    glPushMatrix();
-        glTranslatef(ball_x_pos - BALL_SIZE/2, ball_y_pos  - BALL_SIZE/2, 0);
-        draw_ball();
-    glPopMatrix();
+	// ball(s)
+	for(int ball = 0; ball < ballCount;ball++){
+   	 	glPushMatrix();
+        		glTranslatef(balls[ball].x - BALL_SIZE/2, balls[ball].y  - BALL_SIZE/2, 0);
+        		draw_ball();
+    		glPopMatrix();
+	}
+
+	//powerUp(s)
+	for(int powerUp = 0; powerUp < powerupCount;powerUp++){
+		glPushMatrix();
+			glTranslatef(powerUps[powerUp].x - POWER_UP_SIZE/2,powerUps[powerUp].y - POWER_UP_SIZE/2,0);
+			draw_powerUp();
+		glPopMatrix();
+	}
 
 	draw_status();								// status message
 
@@ -138,15 +155,36 @@ void draw_ball(void)  {
     glEnd();	
 }
 
+void draw_powerUp(void)  {
+    glColor3f(0,0,1);
+    /*
+	glBegin(GL_QUADS);
+    	glVertex3f(0, 0, 0);
+    	glVertex3f(0, POWER_UP_SIZE, 0);
+    	glVertex3f(POWER_UP_SIZE, POWER_UP_SIZE, 0);
+    	glVertex3f(POWER_UP_SIZE, 0, 0);
+    glEnd();	
+	*/
+		drawRectangle(0,POWER_UP_SIZE, POWER_UP_SIZE, 0);
+
+
+}
 
 void draw_paddle(void)  {
     glColor3f(0,0,1);
-    glBegin(GL_QUADS);
+    /*
+	glBegin(GL_QUADS);
     	glVertex3f(0, 0, 0);
     	glVertex3f(0, paddle_length, 0);
     	glVertex3f(PADDLE_WIDTH, paddle_length, 0);
     	glVertex3f(PADDLE_WIDTH, 0, 0);
-    glEnd();	
+    glEnd();
+	*/
+	drawRectangle(0,paddle_length,PADDLE_WIDTH,0);	
+}
+
+void drawRectangle(float x1, float y1, float x2, float y2){
+	glRectf(x1,y1,x2,y2);
 }
 
 void draw_status(void)  {
@@ -154,7 +192,7 @@ void draw_status(void)  {
 	static char mess[300];
 
 	sprintf(mess, 
-		"FPS = %4.0f        Score = %3d    Lives = %1d		Pad = %3.0f", 1.0/dt, score, lives);
+		"FPS = %4.0f        Score = %3d    Lives = %1d		Pad = %3.0f", 1.0/dt, score, lives, paddle_length);
 
 	glRasterPos2i(100, 1);
     _glutBitmapString(GLUT_BITMAP_9_BY_15, mess);

@@ -34,6 +34,7 @@
 #include <stdlib.h>     				// for atof() 
 #include <string.h>     				// for strcpy()
 #include <math.h>       				// for cos(), sin()
+#include <string>						// for string
 
 
 // ===============================================
@@ -69,7 +70,7 @@
 //CREATED TWO CONST FOR A MIN AND MAX PADDLE SIZE
 
 extern float paddle_length;
-#define PADDLE_LENGTH_MAX 100
+#define PADDLE_LENGTH_MAX 300
 #define PADDLE_LENGTH_MIN 30
 
 
@@ -84,6 +85,8 @@ extern float paddle_length;
 #endif
 
 
+//Multiple Balls
+
 struct Ball{
 	float x, y, angle;
 };
@@ -92,7 +95,39 @@ extern Ball balls[MAX_BALL_COUNT];
 extern int ballCount;
 
 
+//Powerups
 
+
+
+const float POWER_UP_SIZE = 15;
+
+static std::string powers [5] = {"SPAWN_BALL","DESTROY_BALL","MAX_PADDLE_LENGTH","MIN_PADDLE_LENGTH","MOVE_BALL"}; //MUST BE STATIC OR IT THROWS ERROR ALSO THROWS ERROR IF DECLARED INSIDE STRUCT???
+struct PowerUp{					
+	float x;
+	float y;
+	std::string type;
+};
+
+
+
+
+const int POWER_UP_TYPE_MAX_COUNT = 5;			//Number of powerup types 
+const int POWER_UP_MAX_COUNT = 5;				//Max number of powerups 
+extern PowerUp powerUps[POWER_UP_MAX_COUNT];
+extern int powerupCount;
+
+
+
+
+
+
+
+
+
+
+
+
+extern int count_to_spawn;
 
 extern float paddle_x_pos;
 extern float paddle_y_pos;
@@ -125,6 +160,7 @@ void draw_ball(void);
 void draw_paddle(void); 
 int draw_scene(void);					// draw scene by calling draw_* functions
 void draw_status(void);					// draw status message
+void draw_powerUp(void);    
 
 void get_input(void);					// keyboard/mouse/pad input
 
@@ -135,5 +171,13 @@ void destroyBall(int index);    //destroys a ball
 void onPaddleHit(int index,const float maxPos);
 
 void onPaddleMiss(int index);
+
+void checkNeedForSpawn();
+
+void createNewPowerup(float x, float y);		//spawns a new powerup
+
+void destroyPowerup(int index);
+
+void drawRectangle(float x1, float y1, float x2, float y2);
 
 #endif

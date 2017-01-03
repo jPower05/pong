@@ -93,15 +93,21 @@ int draw_scene(void) {
         draw_paddle();
     glPopMatrix();
 
-	// ball
-	
-    glPushMatrix();
-		for (int n = 0; n < ballCount; n ++){
-        	glTranslatef(balls[n].x - BALL_SIZE/2, balls[n].y  - BALL_SIZE/2, 0);
-        	draw_ball();
-		}
-		
-    glPopMatrix();
+	// ball(s)
+	for(int ball = 0; ball < ballCount;ball++){
+   	 	glPushMatrix();
+        		glTranslatef(balls[ball].x - BALL_SIZE/2, balls[ball].y  - BALL_SIZE/2, 0);
+        		draw_ball();
+    		glPopMatrix();
+	}
+
+	//powerUp(s)
+	for(int powerUp = 0; powerUp < powerupCount;powerUp++){
+		glPushMatrix();
+			glTranslatef(powerUps[powerUp].x - POWER_UP_SIZE/2,powerUps[powerUp].y - POWER_UP_SIZE/2,0);
+			draw_powerUp();
+		glPopMatrix();
+	}
 
 	draw_status();								// status message
 
@@ -141,23 +147,47 @@ void draw_walls(void) {
 
 void draw_ball(void)  {
     glColor3f(0,1,0);
-    glBegin(GL_QUADS);
+    /*
+	glBegin(GL_QUADS);
     	glVertex3f(0, 0, 0);
     	glVertex3f(0, BALL_SIZE, 0);
     	glVertex3f(BALL_SIZE, BALL_SIZE, 0);
     	glVertex3f(BALL_SIZE, 0, 0);
-    glEnd();	
+    glEnd();
+	*/
+	drawRectangle(0,BALL_SIZE, BALL_SIZE, 0);	
 }
 
+void draw_powerUp(void)  {
+    glColor3f(0,0,1);
+    /*
+	glBegin(GL_QUADS);
+    	glVertex3f(0, 0, 0);
+    	glVertex3f(0, POWER_UP_SIZE, 0);
+    	glVertex3f(POWER_UP_SIZE, POWER_UP_SIZE, 0);
+    	glVertex3f(POWER_UP_SIZE, 0, 0);
+    glEnd();	
+	*/
+		drawRectangle(0,POWER_UP_SIZE, POWER_UP_SIZE, 0);
+
+
+}
 
 void draw_paddle(void)  {
     glColor3f(0,0,1);
-    glBegin(GL_QUADS);
+    /*
+	glBegin(GL_QUADS);
     	glVertex3f(0, 0, 0);
     	glVertex3f(0, paddle_length, 0);
     	glVertex3f(PADDLE_WIDTH, paddle_length, 0);
     	glVertex3f(PADDLE_WIDTH, 0, 0);
-    glEnd();	
+    glEnd();
+	*/
+	drawRectangle(0,paddle_length,PADDLE_WIDTH,0);	
+}
+
+void drawRectangle(float x1, float y1, float x2, float y2){
+	glRectf(x1,y1,x2,y2);
 }
 
 void draw_status(void)  {
